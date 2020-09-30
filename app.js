@@ -128,6 +128,10 @@ app.get("/about", function (req, res) {
   res.render("about");
 });
 //Server starting at 3000.
-app.listen(process.env.PPRT || 3000, function () {
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+app.listen(port,function () {
   console.log("Server started at port 3000.");
 });
