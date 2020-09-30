@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const app = express();
 const _ = require("lodash");
 
+mongoose.set('useFindAndModify', false);
+
 app.set("view engine", "ejs"); //ejs inclusion default function
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public")); //for using static files
@@ -50,10 +52,9 @@ app.get("/", function (req, res) {
       });
       res.redirect("/");
     } else{
-      res.render("list", { listTitle: "Today  ", newListItems: foundItems });
+      res.render("list", { listTitle: "Today", newListItems: foundItems });
     }
   });
-
 });
 
 app.post("/", function (req, res) {
@@ -79,7 +80,7 @@ app.post("/", function (req, res) {
 app.post("/delete", function(req, res){
   const checkedItemId = req.body.checkbox;
   const listName = req.body.listName;
-  if(listName ==="Today"){
+  if(listName === "Today"){
     Item.findByIdAndRemove(checkedItemId, function(err){
       if(!err){
         console.log("Sucessfully deleted checked item.");
@@ -117,21 +118,9 @@ List.findOne({name: customListName}, function(err, foundList){
 
 });
 
-app.post("/", function (req, res) {
-  let item = req.body.newItem;
-  workItems.push(item);
-  res.redirect("/work");
-});
 
-// for aboutus directory
-app.get("/about", function (req, res) {
-  res.render("about");
-});
 //Server starting at 3000.
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 3000;
-}
-app.listen(port,function () {
+const port = 3000;
+app.listen(process.env.PORT || port ,function () {
   console.log("Server started at port 3000.");
 });
